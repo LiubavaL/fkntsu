@@ -1,9 +1,10 @@
 import jwt_decode from 'jwt-decode'
+import type { User } from '@prisma/client'
 import { callWithNuxt } from '#app'
 
 export default function () {
   const useAuthToken = () => useState<null | string>('auth_token', () => null)
-  const useAuthUser = () => useState<any>('auth_user', () => null)
+  const useAuthUser = () => useState<User | null>('auth_user', () => null)
   const useAuthLoading = () => useState<boolean>('auth_loading', () => true)
 
   const isLoggedIn = computed(() => !!useAuthUser().value)
@@ -13,7 +14,7 @@ export default function () {
     authToken.value = token
   }
 
-  const setAuthUser = (user: any) => {
+  const setAuthUser = (user: User | null) => {
     const authUser = useAuthUser()
     authUser.value = user
   }
@@ -25,7 +26,7 @@ export default function () {
   const getUser = async () => {
     const nuxtApp = useNuxtApp()
     // try {
-    const user = await useFetchApi('/api/auth/user', { method: 'GET' })
+    const user = await useFetchApi<User>('/api/auth/user', { method: 'GET' })
     // const user = await callWithNuxt(nuxtApp, useFetchApi, ['api/auth/user'])
     // setAuthUser(user)
     callWithNuxt(nuxtApp, setAuthUser, [user])
