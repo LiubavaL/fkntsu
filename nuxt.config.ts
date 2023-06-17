@@ -4,6 +4,7 @@ export default defineNuxtConfig({
     '@nuxtjs/tailwindcss',
     'nuxt-icon',
     '@pinia/nuxt',
+    '@formkit/nuxt',
   ],
   css: ['@/assets/css/main.css'],
   postcss: {
@@ -16,8 +17,4 @@ export default defineNuxtConfig({
     jwtAccessSecret: process.env.JWT_ACCESS_TOKEN,
     jwtRefreshSecret: process.env.JWT_REFRESH_TOKEN,
   },
-  // debug: true,
-  // app: {
-  //   pageTransition: { name: 'page', mode: 'out-in' }
-  // },
 })
