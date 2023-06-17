@@ -1,68 +1,65 @@
 <script setup lang="ts">
+import type { Post } from '@prisma/client'
+
+const { loading, data: posts, fetchData } = useFetchWithStatuses<Post[]>('/api/posts', { loading: true })
+
 definePageMeta({
   layout: 'admin',
 })
 
-// TODO fetch posts list
+onBeforeMount(() => {
+  fetchData()
+})
 </script>
 
 <template>
-  <h1>
-    Posts
-  </h1>
+  <div>
+    <h1>
+      Posts
+    </h1>
 
-  <NuxtLink class="btn btn-secondary" to="/admin/posts/create">
-    Add post
-  </NuxtLink>
+    <NuxtLink class="btn btn-secondary" to="/admin/posts/create">
+      Add post
+    </NuxtLink>
 
-  <!-- <UiModal>
-    <template #default="{ reveal }">
-      <button class="btn btn-secondary" @click="reveal">
-        Create 2
-      </button>
-    </template>
+    <UiLoader v-if="loading" />
 
-    <template #content="{ confirm, cancel }">
-      <div>
-        Here is the Create 2 content
-        <button class="btn btn-primary" @click="confirm">
-          confirm
-        </button>
-        <button class="btn btn-secondary" @click="cancel">
-          cancel
-        </button>
-      </div>
-    </template>
-  </UiModal> -->
-
-  <table class="table table-zebra w-full">
-    <!-- head -->
-    <thead>
-      <tr>
-        <th />
-        <th>Title</th>
-        <th>Author</th>
-        <th>Created</th>
-        <th />
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <th>1</th>
-        <td>Hello world</td>
-        <td>Liuba V</td>
-        <td>12/12/2020</td>
-        <td>
-          <button class="mr-3" @click="$router.push('/admin/posts/123')">
-            <Icon name="grommet-icons:edit" />
-          </button>
-          <button class="text-red-500">
-            <Icon name="grommet-icons:trash" />
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-
-  <NuxtPage />
+    <table v-else class="table table-zebra w-full">
+      <thead>
+        <tr>
+          <th />
+          <th>Title</th>
+          <th>Author</th>
+          <th>Created</th>
+          <th />
+        </tr>
+      </thead>
+      <tbody>
+        <div v-if="!posts || !posts.length">
+          No posts yet.
+        </div>
+        <template v-else>
+          <tr v-for="(post, index) in posts" :key="post.id">
+            <th>{{ index + 1 }}</th>
+            <td>{{ post.title }}</td>
+            <td>{{ post.authorId }}</td>
+            <td>{{ post.createdAt }}</td>
+            <td>
+              <button class="mr-3" @click="$router.push(`/admin/posts/${post.id}`)">
+                <Icon name="grommet-icons:edit" />
+              </button>
+              <button class="text-red-500">
+                <Icon name="grommet-icons:trash" />
+              </button>
+            </td>
+          </tr>
+        </template>
+      </tbody>
+    </table>
+    <div>
+      <ClientOnly>
+        <NuxtPage />
+      </ClientOnly>
+    </div>
+  </div>
 </template>

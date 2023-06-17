@@ -5,9 +5,6 @@ definePageMeta({
   layout: 'admin',
 })
 
-onMounted(() => {
-})
-
 async function fetchUser() {
   await getUser()
 }
