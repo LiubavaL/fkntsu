@@ -1,8 +1,8 @@
-export default function (req: any, opts = {}) {
+function useFetchApi<T>(req: any, opts = { headers: {} }) {
   const { useAuthToken } = useAuth()
   const token = useAuthToken().value
 
-  return $fetch(req, {
+  return $fetch<T>(req, {
     ...opts,
     headers: {
       ...opts.headers,
@@ -10,3 +10,5 @@ export default function (req: any, opts = {}) {
     },
   })
 }
+
+export default useFetchApi
