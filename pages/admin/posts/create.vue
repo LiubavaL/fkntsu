@@ -1,33 +1,32 @@
 <script setup lang="ts">
 const router = useRouter()
 
-onMounted(() => {
-  // we don't await this async function, to avoid blocking rendering
-// this component's setup function
-// TODO check if it's nedeed
-  if (!document.referrer)
-    preloadRouteComponents('/admin/posts')
-})
-
-const onCancel = () => {
+const cancel = async () => {
   if (document.referrer)
     router.back()
   else
-    router.push('/admin/posts')
+    await navigateTo('/admin/posts')
+}
+
+const createPost = async (data) => {
+  try {
+    const responce = await useFetchApi('/api/posts', { method: 'POST', body: data })
+    cancel()
+  }
+  catch (error) {
+    console.error(error)
+  }
 }
 </script>
 
 <template>
-  <UiModal open :cancel="onCancel">
+  <UiModal open :cancel="cancel">
     <template #content>
       <div>
-        Create modal
-        <!-- <button class="btn btn-primary" @click="modal1?.confirm">
-            confirm
-          </button>
-          <button class="btn btn-secondary" @click="modal1?.cancel">
-            cancel
-          </button> -->
+        <h2>Create post</h2>
+        <div>
+          <AdminPostsForm :submit="createPost" />
+        </div>
       </div>
     </template>
   </UiModal>
