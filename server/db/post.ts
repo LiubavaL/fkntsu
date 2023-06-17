@@ -15,7 +15,7 @@ export const createPost = (postData: Prisma.PostCreateInput) => {
   })
 }
 
-export const editPost = (postId: string, postData: Prisma.PostUpdateInput) => {
+export const updatePost = (postId: string, postData: Prisma.PostUpdateInput) => {
   return prisma.post.update({ data: postData, where: { id: postId } })
 }
 
